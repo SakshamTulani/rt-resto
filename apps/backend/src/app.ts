@@ -2,6 +2,8 @@ import express, { type Express } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { env } from "./config";
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./lib";
 
 const app: Express = express();
 
@@ -18,6 +20,9 @@ app.use(
 
 // Body parsing
 app.use(express.json());
+
+// Better Auth routes - must come before other routes
+app.all("/api/auth/{*any}", toNodeHandler(auth));
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
