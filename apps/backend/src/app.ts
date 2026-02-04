@@ -18,11 +18,11 @@ app.use(
   }),
 );
 
+// Better Auth routes - must come before other routes
+app.all("/api/auth/{*path}", toNodeHandler(auth));
+
 // Body parsing
 app.use(express.json());
-
-// Better Auth routes - must come before other routes
-app.all("/api/auth/{*any}", toNodeHandler(auth));
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
