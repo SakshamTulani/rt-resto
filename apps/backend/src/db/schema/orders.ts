@@ -10,32 +10,37 @@ import {
 } from "drizzle-orm/pg-core";
 import { users } from "./users";
 import { menuItems, customizationOptions } from "./menu";
+import { relations } from "drizzle-orm";
 
 export const orderStatusEnum = pgEnum("order_status", [
-  "received",
+  "pending",
+  "confirmed",
   "preparing",
   "ready",
   "completed",
+  "cancelled",
 ]);
 
 export const orders = pgTable(
   "orders",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    customerId: text("customer_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    status: orderStatusEnum("status").notNull().default("received"),
+    userId: text("user_id").references(() => users.id, {
+      onDelete: "set null",
+    }),
+    sessionId: text("session_id").notNull(),
+    status: orderStatusEnum("status").notNull().default("pending"),
     subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
     tax: decimal("tax", { precision: 10, scale: 2 }).notNull(),
     total: decimal("total", { precision: 10, scale: 2 }).notNull(),
-    specialInstructions: text("special_instructions"),
+    notes: text("notes"),
     version: integer("version").notNull().default(1),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
   (table) => [
-    index("orders_customer_id_idx").on(table.customerId),
+    index("orders_user_id_idx").on(table.userId),
+    index("orders_session_id_idx").on(table.sessionId),
     index("orders_status_idx").on(table.status),
   ],
 );
@@ -53,7 +58,7 @@ export const orderItems = pgTable(
     quantity: integer("quantity").notNull(),
     unitPrice: decimal("unit_price", { precision: 10, scale: 2 }).notNull(),
     totalPrice: decimal("total_price", { precision: 10, scale: 2 }).notNull(),
-    specialInstructions: text("special_instructions"),
+    notes: text("notes"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (table) => [
@@ -93,3 +98,23 @@ export const orderStatusHistory = pgTable(
   },
   (table) => [index("order_status_history_order_id_idx").on(table.orderId)],
 );
+
+// Relations
+export const ordersRelations = relations(orders, ({ one, many }) => ({
+  user: one(users, {
+    fields: [orders.userId],
+    references: [users.id],
+  }),
+  items: many(orderItems),
+}));
+
+export const orderItemsRelations = relations(orderItems, ({ one }) => ({
+  order: one(orders, {
+    fields: [orderItems.orderId],
+    references: [orders.id],
+  }),
+  menuItem: one(menuItems, {
+    fields: [orderItems.menuItemId],
+    references: [menuItems.id],
+  }),
+}));
