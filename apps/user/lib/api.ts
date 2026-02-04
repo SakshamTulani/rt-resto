@@ -3,7 +3,7 @@ import type {
   MenuItem,
   MenuFilterParams,
   ApiResponse,
-  Order,
+  OrderWithItems,
 } from "@workspace/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3002";
@@ -100,7 +100,7 @@ class ApiClient {
   async createOrder(
     items: { menuItemId: string; quantity: number; notes?: string }[],
     notes?: string,
-  ): Promise<ApiResponse<Order>> {
+  ): Promise<ApiResponse<OrderWithItems>> {
     return this.request("/api/orders", {
       method: "POST",
       body: JSON.stringify({
@@ -111,11 +111,16 @@ class ApiClient {
     });
   }
 
-  async getSessionOrders(): Promise<ApiResponse<Order[]>> {
+  // Get current user's orders (requires auth)
+  async getMyOrders(): Promise<ApiResponse<OrderWithItems[]>> {
+    return this.request("/api/orders/my");
+  }
+
+  async getSessionOrders(): Promise<ApiResponse<OrderWithItems[]>> {
     return this.request(`/api/orders/session/${this.getSessionId()}`);
   }
 
-  async getOrder(id: string): Promise<ApiResponse<Order>> {
+  async getOrder(id: string): Promise<ApiResponse<OrderWithItems>> {
     return this.request(`/api/orders/${id}`);
   }
 

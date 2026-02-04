@@ -127,14 +127,15 @@ router.post(
   },
 );
 
-// POST /api/orders - Create a new order
+// POST /api/orders - Create a new order (requires authentication)
 router.post(
   "/",
+  requireAuth,
   validateBody(createOrderSchema),
   async (req: Request, res: Response) => {
     try {
       const { sessionId, items, notes } = req.body;
-      const userId = req.user?.id; // Optional - may be guest
+      const userId = req.user!.id; // Guaranteed by requireAuth
 
       const result = await ordersService.create({
         userId,

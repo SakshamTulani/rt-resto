@@ -6,6 +6,9 @@ import { X, Plus, Minus, ShoppingBag, Trash2 } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import { useState } from "react";
 
+import { useSession } from "@/modules/auth";
+import { useRouter } from "next/navigation";
+
 interface CartSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -23,13 +26,22 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
   } = useCartStore();
   const createOrder = useCreateOrder();
   const [notes, setNotes] = useState("");
+  const { data: session } = useSession();
+  const router = useRouter();
 
   const handlePlaceOrder = async () => {
+    if (!session?.user) {
+      onOpenChange(false);
+      router.push("/login");
+      return;
+    }
+
     try {
       await createOrder.mutateAsync(notes || undefined);
       setNotes("");
       onOpenChange(false);
       alert("Order placed successfully!");
+      router.push("/orders");
     } catch (error) {
       alert("Failed to place order. Please try again.");
     }

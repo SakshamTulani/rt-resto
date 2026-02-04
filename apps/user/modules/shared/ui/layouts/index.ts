@@ -1,1 +1,1 @@
-export { MainLayout, AppHeader } from "./main-layout";
+export { MainLayout } from "./main-layout";
