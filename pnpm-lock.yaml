@@ -72,6 +72,12 @@ importers:
 
   apps/backend:
     dependencies:
+      '@workspace/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@workspace/validators':
+        specifier: workspace:*
+        version: link:../../packages/validators
       better-auth:
         specifier: ^1.4.18
         version: 1.4.18(drizzle-kit@0.31.8)(drizzle-orm@0.45.1(@types/pg@8.16.0)(kysely@0.28.11)(pg@8.18.0))(next@16.1.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(pg@8.18.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -288,8 +294,8 @@ importers:
   packages/validators:
     dependencies:
       zod:
-        specifier: ^3.24.0
-        version: 3.25.76
+        specifier: ^4.3.6
+        version: 4.3.6
     devDependencies:
       '@workspace/typescript-config':
         specifier: workspace:*

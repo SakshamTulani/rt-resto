@@ -4,6 +4,7 @@ import helmet from "helmet";
 import { env } from "./config";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib";
+import { apiRouter } from "./routes";
 
 const app: Express = express();
 
@@ -24,9 +25,13 @@ app.all("/api/auth/{*path}", toNodeHandler(auth));
 // Body parsing
 app.use(express.json());
 
+// Health check
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
+
+// API routes
+app.use("/api", apiRouter);
 
 // 404 handler
 app.use((_req, res) => {
