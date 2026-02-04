@@ -2,7 +2,7 @@
 
 import type { MenuItem } from "@workspace/types";
 import { useCartStore } from "@/lib/store";
-import { Plus, Leaf, Wheat } from "lucide-react";
+import { Plus, Leaf, Wheat, Vegan } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 
 interface MenuCardProps {
@@ -46,7 +46,7 @@ export function MenuCard({ item }: MenuCardProps) {
             <span
               className="bg-emerald-500 text-white p-1.5 rounded-full"
               title="Vegan">
-              <span className="text-xs font-bold">V</span>
+              <Vegan className="h-3 w-3" />
             </span>
           )}
           {item.isGlutenFree && (

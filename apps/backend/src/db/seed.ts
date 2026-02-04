@@ -57,6 +57,7 @@ async function seed() {
       basePrice: "5.99",
       prepTimeMinutes: 10,
       isVegetarian: true,
+      stockQuantity: 50,
     },
     {
       categoryId: categoryMap.get("appetizers")!,
@@ -64,6 +65,7 @@ async function seed() {
       description: "Crispy fried wings with your choice of sauce",
       basePrice: "12.99",
       prepTimeMinutes: 15,
+      stockQuantity: 30,
     },
     {
       categoryId: categoryMap.get("appetizers")!,
@@ -72,6 +74,7 @@ async function seed() {
       basePrice: "8.99",
       prepTimeMinutes: 10,
       isVegetarian: true,
+      stockQuantity: 40,
     },
 
     // Main Course
@@ -82,6 +85,7 @@ async function seed() {
       basePrice: "24.99",
       prepTimeMinutes: 25,
       isGlutenFree: true,
+      stockQuantity: 15,
     },
     {
       categoryId: categoryMap.get("main-course")!,
@@ -89,6 +93,7 @@ async function seed() {
       description: "Breaded chicken with marinara and melted cheese",
       basePrice: "18.99",
       prepTimeMinutes: 20,
+      stockQuantity: 25,
     },
     {
       categoryId: categoryMap.get("main-course")!,
@@ -98,6 +103,7 @@ async function seed() {
       prepTimeMinutes: 15,
       isVegetarian: true,
       isVegan: true,
+      stockQuantity: 35,
     },
 
     // Pizzas
@@ -108,6 +114,7 @@ async function seed() {
       basePrice: "16.99",
       prepTimeMinutes: 20,
       isVegetarian: true,
+      stockQuantity: 20,
     },
     {
       categoryId: categoryMap.get("pizzas")!,
@@ -115,6 +122,7 @@ async function seed() {
       description: "Classic pepperoni with mozzarella cheese",
       basePrice: "18.99",
       prepTimeMinutes: 20,
+      stockQuantity: 25,
     },
     {
       categoryId: categoryMap.get("pizzas")!,
@@ -122,6 +130,7 @@ async function seed() {
       description: "Grilled chicken, BBQ sauce, red onions",
       basePrice: "19.99",
       prepTimeMinutes: 20,
+      stockQuantity: 18,
     },
 
     // Burgers
@@ -131,6 +140,7 @@ async function seed() {
       description: "Angus beef patty with cheddar, lettuce, tomato",
       basePrice: "14.99",
       prepTimeMinutes: 15,
+      stockQuantity: 40,
     },
     {
       categoryId: categoryMap.get("burgers")!,
@@ -138,6 +148,7 @@ async function seed() {
       description: "Beef patty with crispy bacon and special sauce",
       basePrice: "16.99",
       prepTimeMinutes: 15,
+      stockQuantity: 30,
     },
     {
       categoryId: categoryMap.get("burgers")!,
@@ -147,6 +158,7 @@ async function seed() {
       prepTimeMinutes: 15,
       isVegetarian: true,
       isVegan: true,
+      stockQuantity: 20,
     },
 
     // Sides
@@ -159,6 +171,7 @@ async function seed() {
       isVegetarian: true,
       isVegan: true,
       isGlutenFree: true,
+      stockQuantity: 100,
     },
     {
       categoryId: categoryMap.get("sides")!,
@@ -167,6 +180,7 @@ async function seed() {
       basePrice: "5.99",
       prepTimeMinutes: 10,
       isVegetarian: true,
+      stockQuantity: 60,
     },
     {
       categoryId: categoryMap.get("sides")!,
@@ -175,6 +189,7 @@ async function seed() {
       basePrice: "7.99",
       prepTimeMinutes: 5,
       isVegetarian: true,
+      stockQuantity: 45,
     },
 
     // Desserts
@@ -185,6 +200,7 @@ async function seed() {
       basePrice: "8.99",
       prepTimeMinutes: 12,
       isVegetarian: true,
+      stockQuantity: 25,
     },
     {
       categoryId: categoryMap.get("desserts")!,
@@ -193,6 +209,7 @@ async function seed() {
       basePrice: "7.99",
       prepTimeMinutes: 5,
       isVegetarian: true,
+      stockQuantity: 20,
     },
     {
       categoryId: categoryMap.get("desserts")!,
@@ -202,9 +219,10 @@ async function seed() {
       prepTimeMinutes: 5,
       isVegetarian: true,
       isGlutenFree: true,
+      stockQuantity: 50,
     },
 
-    // Beverages
+    // Beverages (unlimited stock - null means unlimited)
     {
       categoryId: categoryMap.get("beverages")!,
       name: "Soft Drinks",
@@ -214,6 +232,7 @@ async function seed() {
       isVegetarian: true,
       isVegan: true,
       isGlutenFree: true,
+      stockQuantity: null, // unlimited
     },
     {
       categoryId: categoryMap.get("beverages")!,
@@ -224,6 +243,7 @@ async function seed() {
       isVegetarian: true,
       isVegan: true,
       isGlutenFree: true,
+      stockQuantity: null, // unlimited
     },
     {
       categoryId: categoryMap.get("beverages")!,
@@ -233,6 +253,7 @@ async function seed() {
       prepTimeMinutes: 5,
       isVegetarian: true,
       isGlutenFree: true,
+      stockQuantity: null, // unlimited
     },
   ];
 

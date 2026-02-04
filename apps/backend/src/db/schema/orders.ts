@@ -8,7 +8,7 @@ import {
   pgEnum,
   index,
 } from "drizzle-orm/pg-core";
-import { users } from "./users";
+import { user } from "./user";
 import { menuItems, customizationOptions } from "./menu";
 import { relations } from "drizzle-orm";
 
@@ -25,7 +25,7 @@ export const orders = pgTable(
   "orders",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: text("user_id").references(() => users.id, {
+    userId: text("user_id").references(() => user.id, {
       onDelete: "set null",
     }),
     sessionId: text("session_id").notNull(),
@@ -94,16 +94,16 @@ export const orderStatusHistory = pgTable(
       .references(() => orders.id, { onDelete: "cascade" }),
     status: orderStatusEnum("status").notNull(),
     changedAt: timestamp("changed_at").notNull().defaultNow(),
-    changedById: text("changed_by_id").references(() => users.id),
+    changedById: text("changed_by_id").references(() => user.id),
   },
   (table) => [index("order_status_history_order_id_idx").on(table.orderId)],
 );
 
 // Relations
 export const ordersRelations = relations(orders, ({ one, many }) => ({
-  user: one(users, {
+  user: one(user, {
     fields: [orders.userId],
-    references: [users.id],
+    references: [user.id],
   }),
   items: many(orderItems),
 }));
