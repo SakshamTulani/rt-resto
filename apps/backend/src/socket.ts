@@ -15,12 +15,6 @@ export function initializeSocket(httpServer: HttpServer): SocketServer {
   io.on("connection", (socket) => {
     console.log(`Socket connected: ${socket.id}`);
 
-    // Join room based on session or user ID for targeted updates
-    socket.on("join:session", (sessionId: string) => {
-      socket.join(`session:${sessionId}`);
-      console.log(`Socket ${socket.id} joined session:${sessionId}`);
-    });
-
     socket.on("join:order", (orderId: string) => {
       socket.join(`order:${orderId}`);
       console.log(`Socket ${socket.id} joined order:${orderId}`);
@@ -61,10 +55,6 @@ export const orderEvents = {
       sessionId: order.sessionId,
       userId: order.userId,
     });
-    // Notify user's session
-    io.to(`session:${order.sessionId}`).emit("order:created", {
-      orderId: order.id,
-    });
   },
 
   statusUpdated: (order: {
@@ -86,19 +76,11 @@ export const orderEvents = {
       status: order.status,
       previousStatus: order.previousStatus,
     });
-    // Notify session
-    io.to(`session:${order.sessionId}`).emit("order:status-updated", {
-      orderId: order.id,
-      status: order.status,
-    });
   },
 
   cancelled: (order: { id: string; sessionId: string }) => {
     const io = getIO();
     io.to("admin").emit("order:cancelled", { orderId: order.id });
     io.to(`order:${order.id}`).emit("order:cancelled", { orderId: order.id });
-    io.to(`session:${order.sessionId}`).emit("order:cancelled", {
-      orderId: order.id,
-    });
   },
 };

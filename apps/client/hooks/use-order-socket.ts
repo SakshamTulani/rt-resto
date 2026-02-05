@@ -59,54 +59,7 @@ export function useOrderSocket(orderId: string | undefined) {
       socket.off("order:status-updated", handleStatusUpdated);
       socket.off("order:cancelled", handleOrderCancelled);
       hasJoined.current = false;
-    };
-  }, [orderId, queryClient]);
-}
-
-/**
- * Hook to subscribe to session-level order updates (for order history)
- */
-export function useSessionSocket(sessionId: string | undefined) {
-  const queryClient = useQueryClient();
-  const hasJoined = useRef(false);
-
-  useEffect(() => {
-    if (!sessionId) return;
-
-    const socket = connectSocket();
-
-    const handleConnect = () => {
-      if (!hasJoined.current) {
-        socket.emit("join:session", sessionId);
-        hasJoined.current = true;
-        console.log(`Joined session room: ${sessionId}`);
-      }
-    };
-
-    const handleOrderCreated = () => {
-      queryClient.invalidateQueries({ queryKey: ["my-orders"] });
-      queryClient.invalidateQueries({ queryKey: ["session-orders"] });
-    };
-
-    const handleStatusUpdated = () => {
-      queryClient.invalidateQueries({ queryKey: ["my-orders"] });
-      queryClient.invalidateQueries({ queryKey: ["session-orders"] });
-    };
-
-    socket.on("connect", handleConnect);
-    socket.on("order:created", handleOrderCreated);
-    socket.on("order:status-updated", handleStatusUpdated);
-
-    if (socket.connected) {
-      handleConnect();
-    }
-
-    return () => {
-      socket.off("connect", handleConnect);
-      socket.off("order:created", handleOrderCreated);
-      socket.off("order:status-updated", handleStatusUpdated);
-      hasJoined.current = false;
       disconnectSocket();
     };
-  }, [sessionId, queryClient]);
+  }, [orderId, queryClient]);
 }
