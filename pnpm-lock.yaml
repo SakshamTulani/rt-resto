@@ -155,7 +155,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  apps/user:
+  apps/client:
     dependencies:
       '@tanstack/react-form':
         specifier: ^1.28.0
