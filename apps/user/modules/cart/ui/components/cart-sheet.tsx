@@ -2,6 +2,7 @@
 
 import { useCartStore, type CartItem } from "@/lib/store";
 import { useCreateOrder } from "@/lib/hooks";
+import { useQueryClient } from "@tanstack/react-query";
 import { X, Plus, Minus, ShoppingBag, Trash2 } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import { useState } from "react";
@@ -26,6 +27,7 @@ import { Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
 export function CartSheet({ open, onOpenChange }: CartSheetProps) {
+  const queryClient = useQueryClient();
   const {
     items,
     removeItem,
@@ -61,6 +63,9 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
 
     try {
       await createOrder.mutateAsync(notes || undefined);
+      // Invalidate menu queries to update stock
+      queryClient.invalidateQueries({ queryKey: ["menu"] });
+
       setPaymentState("success");
       // Wait for success animation
       setTimeout(() => {

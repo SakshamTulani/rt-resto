@@ -42,7 +42,8 @@ export function useMenuItems(filters?: MenuFilterParams) {
   return useQuery({
     queryKey: menuKeys.list(filters),
     queryFn: () => api.getMenuItems(filters),
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: 30 * 1000, // 30 seconds
+    refetchInterval: 30 * 1000, // Poll every 30s for stock updates
   });
 }
 

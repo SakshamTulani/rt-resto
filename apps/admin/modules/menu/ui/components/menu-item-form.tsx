@@ -74,9 +74,10 @@ export function MenuItemForm({
         basePrice: parseFloat(value.basePrice),
         imageUrl: value.imageUrl || null,
         prepTimeMinutes: parseInt(value.prepTimeMinutes),
-        stockQuantity: value.stockQuantity
-          ? Number(value.stockQuantity)
-          : undefined,
+        stockQuantity:
+          value.stockQuantity === undefined || value.stockQuantity === null
+            ? null
+            : Number(value.stockQuantity),
       };
 
       if (isEdit && itemId) {
