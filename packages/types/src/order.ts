@@ -23,6 +23,10 @@ export interface Order {
   notes: string | null;
   createdAt: Date;
   updatedAt: Date;
+  user?: {
+    name: string | null;
+    email: string;
+  } | null;
 }
 
 /**
@@ -43,6 +47,10 @@ export interface OrderItem {
  */
 export interface OrderWithItems extends Order {
   items: OrderItemDisplay[];
+  user?: {
+    name: string | null;
+    email: string;
+  } | null;
 }
 
 /**

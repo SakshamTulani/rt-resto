@@ -37,6 +37,12 @@ export const ordersService = {
             menuItem: true,
           },
         },
+        user: {
+          columns: {
+            name: true,
+            email: true,
+          },
+        },
       },
       orderBy: [desc(orders.createdAt)],
     });
@@ -52,6 +58,12 @@ export const ordersService = {
         items: {
           with: {
             menuItem: true,
+          },
+        },
+        user: {
+          columns: {
+            name: true,
+            email: true,
           },
         },
       },
@@ -71,6 +83,12 @@ export const ordersService = {
             menuItem: true,
           },
         },
+        user: {
+          columns: {
+            name: true,
+            email: true,
+          },
+        },
       },
       orderBy: [desc(orders.createdAt)],
     });
@@ -86,6 +104,12 @@ export const ordersService = {
         items: {
           with: {
             menuItem: true,
+          },
+        },
+        user: {
+          columns: {
+            name: true,
+            email: true,
           },
         },
       },

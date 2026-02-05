@@ -86,41 +86,216 @@ Follow these steps to set up the project locally:
 
 ### Base URL: `/api`
 
+**Response Format:**
+All successful responses are wrapped in a `data` object:
+
+```json
+{
+  "data": { ... }
+}
+```
+
+Error responses:
+
+```json
+{
+  "error": "Error message description"
+}
+```
+
+---
+
 #### **Authentication**
 
-- `ALL /api/auth/*` - Handled by Better Auth
+- `ALL /api/auth/*` - Handled by [Better Auth](https://better-auth.com)
+
+---
 
 #### **Categories** (`/api/categories`)
 
-- `GET /` - Get all categories
-- `GET /:id` - Get category by ID
-- `GET /slug/:slug` - Get category by slug
-- `POST /` - Create category (Admin only)
-- `PUT /:id` - Update category (Admin only)
-- `DELETE /:id` - Delete category (Admin only)
+**GET /**
+
+- **Description:** Get all categories
+- **Response:** `data: Category[]`
+
+**GET /:id**
+
+- **Description:** Get category by ID
+- **Response:** `data: Category`
+
+**GET /slug/:slug**
+
+- **Description:** Get category by slug
+- **Response:** `data: Category`
+
+**POST /** (Admin only)
+
+- **Description:** Create category
+- **Request Body:**
+  ```json
+  {
+    "name": "string (required, max 100)",
+    "slug": "string (required, max 100, lowercase-hyphens)",
+    "sortOrder": "number (optional, int >= 0)"
+  }
+  ```
+- **Response:** `data: Category` (Status 201)
+
+**PUT /:id** (Admin only)
+
+- **Description:** Update category
+- **Request Body:**
+  ```json
+  {
+    "name": "string (optional)",
+    "slug": "string (optional)",
+    "sortOrder": "number (optional)"
+  }
+  ```
+- **Response:** `data: Category`
+
+**DELETE /:id** (Admin only)
+
+- **Description:** Delete category
+- **Response:** Empty (Status 204)
+
+---
 
 #### **Menu** (`/api/menu`)
 
-- `GET /` - Get all menu items (Supports filters: `categoryId`, `search`, `minPrice`, `maxPrice`, `available`, `isVegetarian`, `isVegan`, `isGlutenFree`)
-- `GET /:id` - Get menu item by ID
-- `POST /` - Create menu item (Admin only)
-- `PUT /:id` - Update menu item (Admin only)
-- `DELETE /:id` - Soft delete menu item (Admin only)
+**GET /**
+
+- **Description:** Get all menu items
+- **Query Params:**
+  - `categoryId`: UUID
+  - `search`: string
+  - `minPrice`: number
+  - `maxPrice`: number
+  - `available`: "true" | "false"
+  - `isVegetarian`: "true"
+  - `isVegan`: "true"
+  - `isGlutenFree`: "true"
+- **Response:** `data: MenuItem[]`
+
+**GET /:id**
+
+- **Description:** Get menu item by ID
+- **Response:** `data: MenuItem`
+
+**POST /** (Admin only)
+
+- **Description:** Create menu item
+- **Request Body:**
+  ```json
+  {
+    "categoryId": "string (uuid, required)",
+    "name": "string (required, max 200)",
+    "description": "string (optional, max 1000)",
+    "imageUrl": "string (url, optional)",
+    "basePrice": "number (int, positive, required in cents)",
+    "prepTimeMinutes": "number (int, 1-120, optional)",
+    "isVegetarian": "boolean (optional)",
+    "isVegan": "boolean (optional)",
+    "isGlutenFree": "boolean (optional)",
+    "stockQuantity": "number (int >= 0, optional)"
+  }
+  ```
+- **Response:** `data: MenuItem` (Status 201)
+
+**PUT /:id** (Admin only)
+
+- **Description:** Update menu item
+- **Request Body:** Supports all fields from POST, plus `isAvailable` (boolean). All fields optional.
+- **Response:** `data: MenuItem`
+
+**DELETE /:id** (Admin only)
+
+- **Description:** Soft delete menu item
+- **Response:** Empty (Status 204)
+
+---
 
 #### **Orders** (`/api/orders`)
 
-- `GET /` - Get all orders (Kitchen/Admin only. Filter by `status`)
-- `GET /my` - Get current user's orders (Auth required)
-- `GET /session/:sessionId` - Get orders by session ID (for guests)
-- `GET /:id` - Get order by ID
-- `POST /validate` - Validate cart items and get totals
-- `POST /` - Create a new order (Auth required)
-- `PUT /:id/status` - Update order status (Kitchen only)
-- `POST /:id/cancel` - Cancel an order
+**GET /** (Kitchen/Admin only)
+
+- **Description:** Get all orders
+- **Query Params:**
+  - `status`: "pending" | "confirmed" | "preparing" | "ready" | "completed" | "cancelled"
+- **Response:** `data: Order[]`
+
+**GET /my** (Auth required)
+
+- **Description:** Get current user's orders
+- **Response:** `data: Order[]`
+
+**GET /session/:sessionId**
+
+- **Description:** Get orders by session ID (for guests)
+- **Response:** `data: Order[]`
+
+**GET /:id**
+
+- **Description:** Get order by ID
+- **Response:** `data: Order`
+
+**POST /validate**
+
+- **Description:** Validate cart items and get totals
+- **Request Body:** Same as POST `/` (items array)
+- **Response:**
+  ```json
+  {
+    "data": {
+      "subtotal": "number",
+      "tax": "number",
+      "total": "number",
+      "itemCount": "number"
+    }
+  }
+  ```
+
+**POST /** (Auth required)
+
+- **Description:** Create a new order
+- **Request Body:**
+  ```json
+  {
+    "sessionId": "string (required)",
+    "items": [
+      {
+        "menuItemId": "string (uuid, required)",
+        "quantity": "number (int, 1-99, required)",
+        "notes": "string (optional, max 500)"
+      }
+    ],
+    "notes": "string (optional, max 500)"
+  }
+  ```
+- **Response:** `data: Order` (Status 201)
+
+**PUT /:id/status** (Kitchen only)
+
+- **Description:** Update order status
+- **Request Body:**
+  ```json
+  {
+    "status": "pending" | "confirmed" | "preparing" | "ready" | "completed" | "cancelled"
+  }
+  ```
+- **Response:** `data: Order`
+
+**POST /:id/cancel**
+
+- **Description:** Cancel an order
+- **Response:** `{ "message": "Order cancelled successfully" }`
+
+---
 
 #### **System**
 
 - `GET /health` - Health check endpoint
+  - **Response:** `{ "status": "ok", "timestamp": "..." }`
 
 ## Managing User Roles
 

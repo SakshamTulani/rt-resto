@@ -2,16 +2,7 @@
 
 import { OrderWithItems, OrderStatus } from "@workspace/types";
 import { Button } from "@workspace/ui/components/button";
-import {
-  Clock,
-  MapPin,
-  MoreVertical,
-  CheckCircle,
-  Play,
-  ChefHat,
-  Bell,
-  XCircle,
-} from "lucide-react";
+import { Clock, CheckCircle, Play, ChefHat, Bell, XCircle } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 interface AdminOrderCardProps {
@@ -133,6 +124,18 @@ export function AdminOrderCard({
             <Clock className="h-3 w-3" />
             <span>{timeAgo}</span>
           </div>
+          {order.user && (
+            <div className="mt-2 text-xs border-t pt-1">
+              <p className="font-medium truncate">
+                {order.user.name || "Guest"}
+              </p>
+              <p
+                className="text-muted-foreground truncate"
+                title={order.user.email}>
+                {order.user.email}
+              </p>
+            </div>
+          )}
         </div>
         {order.status === "pending" && (
           <Button

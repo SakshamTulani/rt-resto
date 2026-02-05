@@ -56,16 +56,26 @@ export function OrderDetailView() {
         </Button>
         <div>
           <h1 className="text-2xl font-bold">Order Details</h1>
-          <p className="text-sm text-muted-foreground flex items-center gap-2">
-            <span className="font-mono">#{order.id.slice(0, 8)}</span>
-            <span>•</span>
-            <Calendar className="h-3 w-3" />
-            {new Date(order.createdAt).toLocaleDateString()} at{" "}
-            {new Date(order.createdAt).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </p>
+          <div className="flex flex-col gap-1">
+            <p className="text-sm text-muted-foreground flex items-center gap-2">
+              <span className="font-mono">#{order.id.slice(0, 8)}</span>
+              <span>•</span>
+              <Calendar className="h-3 w-3" />
+              {new Date(order.createdAt).toLocaleDateString()} at{" "}
+              {new Date(order.createdAt).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </p>
+            {order.user && (
+              <p className="text-sm text-muted-foreground">
+                <span className="font-medium text-foreground">
+                  {order.user.name || "Guest"}
+                </span>{" "}
+                &lt;{order.user.email}&gt;
+              </p>
+            )}
+          </div>
         </div>
       </div>
 

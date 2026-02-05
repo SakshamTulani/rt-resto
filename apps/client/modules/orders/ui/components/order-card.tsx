@@ -23,6 +23,17 @@ export function OrderCard({ order }: OrderCardProps) {
             <p className="text-xs text-muted-foreground">Order ID</p>
             <p className="font-mono text-sm">{order.id.slice(0, 8)}...</p>
           </div>
+          {order.user && (
+            <div className="text-right">
+              <p className="text-xs text-muted-foreground">Customer</p>
+              <p className="text-sm font-medium">
+                {order.user.name || "Guest"}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {order.user.email}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Items Summary */}
