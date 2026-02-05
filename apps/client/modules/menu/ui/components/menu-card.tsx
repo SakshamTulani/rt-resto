@@ -12,7 +12,7 @@ interface MenuCardProps {
 export function MenuCard({ item }: MenuCardProps) {
   const addItem = useCartStore((state) => state.addItem);
   const cartItems = useCartStore((state) => state.items);
-  const price = parseFloat(String(item.basePrice));
+  const price = item.basePrice / 100;
 
   const cartItem = cartItems.find((i) => i.menuItem.id === item.id);
   const cartQuantity = cartItem?.quantity || 0;

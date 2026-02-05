@@ -104,7 +104,7 @@ export function OrderDetailView() {
                 <div className="flex justify-between items-start mb-1">
                   <h3 className="font-medium">{item.menuItem?.name}</h3>
                   <p className="font-semibold">
-                    ${parseFloat(String(item.totalPrice)).toFixed(2)}
+                    ${(item.totalPrice / 100).toFixed(2)}
                   </p>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -124,16 +124,16 @@ export function OrderDetailView() {
         <div className="p-6 bg-muted/20 space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Subtotal</span>
-            <span>${parseFloat(String(order.subtotal)).toFixed(2)}</span>
+            <span>${(order.subtotal / 100).toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Tax</span>
-            <span>${parseFloat(String(order.tax)).toFixed(2)}</span>
+            <span>${(order.tax / 100).toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-xl font-bold pt-4 border-t mt-4">
             <span>Total</span>
             <span className="text-orange-500">
-              ${parseFloat(String(order.total)).toFixed(2)}
+              ${(order.total / 100).toFixed(2)}
             </span>
           </div>
         </div>

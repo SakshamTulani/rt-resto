@@ -7,7 +7,7 @@ export interface MenuItem {
   name: string;
   description: string;
   imageUrl: string | null;
-  basePrice: string; // Stored as string for decimal precision
+  basePrice: number; // Stored as integer (cents)
   prepTimeMinutes: number;
   isAvailable: boolean;
   isVegetarian: boolean;

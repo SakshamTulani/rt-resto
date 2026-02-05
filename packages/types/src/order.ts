@@ -17,9 +17,9 @@ export interface Order {
   userId: string | null;
   sessionId: string;
   status: OrderStatus;
-  subtotal: string;
-  tax: string;
-  total: string;
+  subtotal: number;
+  tax: number;
+  total: number;
   notes: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -33,8 +33,8 @@ export interface OrderItem {
   orderId: string;
   menuItemId: string;
   quantity: number;
-  unitPrice: string;
-  totalPrice: string;
+  unitPrice: number;
+  totalPrice: number;
   notes: string | null;
 }
 

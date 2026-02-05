@@ -30,9 +30,9 @@ export const orders = pgTable(
     }),
     sessionId: text("session_id").notNull(),
     status: orderStatusEnum("status").notNull().default("pending"),
-    subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
-    tax: decimal("tax", { precision: 10, scale: 2 }).notNull(),
-    total: decimal("total", { precision: 10, scale: 2 }).notNull(),
+    subtotal: integer("subtotal").notNull(),
+    tax: integer("tax").notNull(),
+    total: integer("total").notNull(),
     notes: text("notes"),
     version: integer("version").notNull().default(1),
     createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -56,8 +56,8 @@ export const orderItems = pgTable(
       .notNull()
       .references(() => menuItems.id),
     quantity: integer("quantity").notNull(),
-    unitPrice: decimal("unit_price", { precision: 10, scale: 2 }).notNull(),
-    totalPrice: decimal("total_price", { precision: 10, scale: 2 }).notNull(),
+    unitPrice: integer("unit_price").notNull(),
+    totalPrice: integer("total_price").notNull(),
     notes: text("notes"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
@@ -77,7 +77,7 @@ export const orderItemCustomizations = pgTable(
     customizationOptionId: uuid("customization_option_id")
       .notNull()
       .references(() => customizationOptions.id),
-    price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+    price: integer("price").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (table) => [

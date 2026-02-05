@@ -27,7 +27,7 @@ export const menuItems = pgTable(
     name: text("name").notNull(),
     description: text("description").notNull().default(""),
     imageUrl: text("image_url"),
-    basePrice: decimal("base_price", { precision: 10, scale: 2 }).notNull(),
+    basePrice: integer("base_price").notNull(),
     prepTimeMinutes: integer("prep_time_minutes").notNull().default(15),
     isAvailable: boolean("is_available").notNull().default(true),
     isVegetarian: boolean("is_vegetarian").notNull().default(false),
@@ -66,10 +66,7 @@ export const customizationOptions = pgTable(
     groupId: uuid("group_id")
       .notNull()
       .references(() => customizationGroups.id, { onDelete: "cascade" }),
-    name: text("name").notNull(),
-    priceModifier: decimal("price_modifier", { precision: 10, scale: 2 })
-      .notNull()
-      .default("0"),
+    priceModifier: integer("price_modifier").notNull().default(0),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (table) => [index("customization_options_group_id_idx").on(table.groupId)],

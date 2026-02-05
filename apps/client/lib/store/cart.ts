@@ -131,7 +131,7 @@ export const useCartStore = create<CartState>()(
 
       getSubtotal: () => {
         return get().items.reduce((sum, item) => {
-          const price = parseFloat(String(item.menuItem.basePrice));
+          const price = item.menuItem.basePrice / 100;
           return sum + price * item.quantity;
         }, 0);
       },

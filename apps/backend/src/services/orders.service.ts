@@ -131,7 +131,7 @@ export const ordersService = {
         return null;
       }
 
-      const unitPrice = parseFloat(menuItem.basePrice);
+      const unitPrice = menuItem.basePrice;
       const totalPrice = unitPrice * item.quantity;
       subtotal += totalPrice;
 
@@ -150,7 +150,7 @@ export const ordersService = {
     }
 
     const taxRate = 0.1; // 10% tax
-    const tax = subtotal * taxRate;
+    const tax = Math.round(subtotal * taxRate);
     const total = subtotal + tax;
 
     return {
@@ -183,9 +183,9 @@ export const ordersService = {
           userId: input.userId ?? null,
           sessionId: input.sessionId,
           status: "pending",
-          subtotal: validation.subtotal.toFixed(2),
-          tax: validation.tax.toFixed(2),
-          total: validation.total.toFixed(2),
+          subtotal: validation.subtotal,
+          tax: validation.tax,
+          total: validation.total,
           notes: input.notes ?? null,
         })
         .returning();
@@ -198,8 +198,8 @@ export const ordersService = {
           orderId: order.id,
           menuItemId: item.menuItemId,
           quantity: item.quantity,
-          unitPrice: item.unitPrice.toFixed(2),
-          totalPrice: item.totalPrice.toFixed(2),
+          unitPrice: item.unitPrice,
+          totalPrice: item.totalPrice,
           notes: item.notes ?? null,
         });
 

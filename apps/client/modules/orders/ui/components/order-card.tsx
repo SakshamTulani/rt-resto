@@ -11,7 +11,7 @@ interface OrderCardProps {
 // const statusConfig = { ... }
 
 export function OrderCard({ order }: OrderCardProps) {
-  const total = parseFloat(String(order.total));
+  const total = order.total / 100;
   const createdAt = new Date(order.createdAt);
 
   return (
@@ -25,16 +25,12 @@ export function OrderCard({ order }: OrderCardProps) {
           </div>
         </div>
 
-        {/* Items */}
-        <div className="space-y-1 mb-3">
-          {order.items?.map((item, index) => (
-            <div key={index} className="flex justify-between text-sm">
-              <span className="text-muted-foreground">
-                {item.quantity}x {item.menuItem?.name || "Item"}
-              </span>
-              <span>${parseFloat(String(item.totalPrice)).toFixed(2)}</span>
-            </div>
-          ))}
+        {/* Items Summary */}
+        <div className="mb-3">
+          <p className="text-sm text-muted-foreground">
+            {order.items?.reduce((acc, item) => acc + item.quantity, 0) || 0}{" "}
+            items
+          </p>
         </div>
 
         {/* Footer */}

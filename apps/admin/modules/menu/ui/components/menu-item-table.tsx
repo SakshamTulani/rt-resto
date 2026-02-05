@@ -72,9 +72,7 @@ export function MenuItemTable({ items, onEdit, onDelete }: MenuItemTableProps) {
                   </div>
                 </TableCell>
                 <TableCell>{item.category?.name || "-"}</TableCell>
-                <TableCell>
-                  ${parseFloat(String(item.basePrice)).toFixed(2)}
-                </TableCell>
+                <TableCell>${(item.basePrice / 100).toFixed(2)}</TableCell>
                 <TableCell>
                   {item.stockQuantity === null ||
                   item.stockQuantity === undefined ? (

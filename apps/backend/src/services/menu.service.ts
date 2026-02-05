@@ -46,11 +46,11 @@ export const menuService = {
     }
 
     if (filters.minPrice !== undefined) {
-      conditions.push(gte(menuItems.basePrice, filters.minPrice.toString()));
+      conditions.push(gte(menuItems.basePrice, filters.minPrice));
     }
 
     if (filters.maxPrice !== undefined) {
-      conditions.push(lte(menuItems.basePrice, filters.maxPrice.toString()));
+      conditions.push(lte(menuItems.basePrice, filters.maxPrice));
     }
 
     if (filters.available !== undefined) {
@@ -91,7 +91,7 @@ export const menuService = {
         name: data.name,
         description: data.description ?? "",
         imageUrl: data.imageUrl ?? null,
-        basePrice: data.basePrice.toString(),
+        basePrice: data.basePrice,
         prepTimeMinutes: data.prepTimeMinutes ?? 15,
         isVegetarian: data.isVegetarian ?? false,
         isVegan: data.isVegan ?? false,
@@ -124,7 +124,7 @@ export const menuService = {
       updatedAt: new Date(),
     };
     if (data.basePrice !== undefined) {
-      updateData.basePrice = data.basePrice.toString();
+      updateData.basePrice = data.basePrice;
       updateData.version = sql`${menuItems.version} + 1`; // Increment version on price change
     }
 

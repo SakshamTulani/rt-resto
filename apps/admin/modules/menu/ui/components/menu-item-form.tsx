@@ -57,7 +57,7 @@ export function MenuItemForm({
     defaultValues: {
       name: item?.name || "",
       description: item?.description || "",
-      basePrice: item?.basePrice ? String(item.basePrice) : "",
+      basePrice: item?.basePrice ? String(item.basePrice / 100) : "",
       categoryId: item?.categoryId || categories[0]?.id || "",
       imageUrl: item?.imageUrl || "",
       prepTimeMinutes: item?.prepTimeMinutes
@@ -71,7 +71,7 @@ export function MenuItemForm({
     onSubmit: async ({ value }) => {
       const payload = {
         ...value,
-        basePrice: parseFloat(value.basePrice),
+        basePrice: Math.round(parseFloat(value.basePrice) * 100),
         imageUrl: value.imageUrl || null,
         prepTimeMinutes: parseInt(value.prepTimeMinutes),
         stockQuantity:

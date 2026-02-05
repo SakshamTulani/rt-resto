@@ -256,7 +256,7 @@ interface CartItemCardProps {
 }
 
 function CartItemCard({ item, onUpdateQuantity, onRemove }: CartItemCardProps) {
-  const price = parseFloat(String(item.menuItem.basePrice));
+  const price = item.menuItem.basePrice / 100;
   const totalPrice = price * item.quantity;
 
   return (

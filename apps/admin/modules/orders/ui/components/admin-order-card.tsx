@@ -156,7 +156,7 @@ export function AdminOrderCard({
             </div>
             {item.totalPrice && (
               <span className="text-muted-foreground text-xs">
-                ${parseFloat(String(item.totalPrice)).toFixed(2)}
+                ${(item.totalPrice / 100).toFixed(2)}
               </span>
             )}
           </div>

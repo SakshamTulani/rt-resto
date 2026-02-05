@@ -8,7 +8,10 @@ export const createMenuItemSchema = z.object({
   name: z.string().min(1, "Name is required").max(200, "Name too long"),
   description: z.string().max(1000, "Description too long").optional(),
   imageUrl: z.string().url("Invalid URL").nullable().optional(),
-  basePrice: z.number().positive("Price must be positive"),
+  basePrice: z
+    .number()
+    .int("Price must be in cents")
+    .positive("Price must be positive"),
   prepTimeMinutes: z.number().int().min(1).max(120).optional(),
   isVegetarian: z.boolean().optional(),
   isVegan: z.boolean().optional(),
