@@ -11,6 +11,7 @@ This project is organized as a monorepo with the following structure:
 - **`apps/backend`**: The backend API service built with Express, providing data to both frontend applications.
 - **`packages/*`**: Shared libraries and configurations used across the applications (UI components, TypeScript config, ESLint config, etc.).
 
+
 ## Prerequisites
 
 Before getting started, ensure you have the following installed on your machine:
@@ -95,3 +96,5 @@ For app-specific commands, you can filter by workspace:
 pnpm --filter client dev
 pnpm --filter admin build
 ```
+## ER diagram
+ <img width="2308" height="2637" alt="image" src="https://github.com/user-attachments/assets/360abcce-86f6-4a01-8f1d-6999d9746d77" />
