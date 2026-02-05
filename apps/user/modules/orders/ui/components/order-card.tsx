@@ -1,62 +1,16 @@
 "use client";
 
 import type { OrderWithItems } from "@workspace/types";
-import {
-  Clock,
-  Package,
-  ChefHat,
-  Bell,
-  CheckCircle,
-  XCircle,
-} from "lucide-react";
 import Link from "next/link";
 
 interface OrderCardProps {
   order: OrderWithItems;
 }
 
-const statusConfig = {
-  pending: {
-    label: "Pending",
-    icon: Clock,
-    color: "text-yellow-500",
-    bg: "bg-yellow-50 dark:bg-yellow-950/20",
-  },
-  confirmed: {
-    label: "Confirmed",
-    icon: Package,
-    color: "text-blue-500",
-    bg: "bg-blue-50 dark:bg-blue-950/20",
-  },
-  preparing: {
-    label: "Preparing",
-    icon: ChefHat,
-    color: "text-orange-500",
-    bg: "bg-orange-50 dark:bg-orange-950/20",
-  },
-  ready: {
-    label: "Ready",
-    icon: Bell,
-    color: "text-green-500",
-    bg: "bg-green-50 dark:bg-green-950/20",
-  },
-  completed: {
-    label: "Completed",
-    icon: CheckCircle,
-    color: "text-emerald-500",
-    bg: "bg-emerald-50 dark:bg-emerald-950/20",
-  },
-  cancelled: {
-    label: "Cancelled",
-    icon: XCircle,
-    color: "text-red-500",
-    bg: "bg-red-50 dark:bg-red-950/20",
-  },
-};
+// Status config removed as unused
+// const statusConfig = { ... }
 
 export function OrderCard({ order }: OrderCardProps) {
-  const status = statusConfig[order.status] || statusConfig.pending;
-  const StatusIcon = status.icon;
   const total = parseFloat(String(order.total));
   const createdAt = new Date(order.createdAt);
 
@@ -68,13 +22,6 @@ export function OrderCard({ order }: OrderCardProps) {
           <div>
             <p className="text-xs text-muted-foreground">Order ID</p>
             <p className="font-mono text-sm">{order.id.slice(0, 8)}...</p>
-          </div>
-          <div
-            className={`flex items-center gap-1.5 px-3 py-1 rounded-full ${status.bg}`}>
-            <StatusIcon className={`h-4 w-4 ${status.color}`} />
-            <span className={`text-sm font-medium ${status.color}`}>
-              {status.label}
-            </span>
           </div>
         </div>
 

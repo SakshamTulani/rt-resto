@@ -5,16 +5,19 @@ import { api } from "@/lib/api";
 import { AdminOrderCard } from "../components/admin-order-card";
 import { OrderStatus, OrderWithItems } from "@workspace/types";
 import { Loader2 } from "lucide-react";
-import { toast } from "sonner"; // Assuming sonner is available or use native toast
+import { toast } from "sonner";
+import { useAdminSocket } from "@/hooks/use-admin-socket";
 
 export function LiveOrdersView() {
   const queryClient = useQueryClient();
 
-  // Poll for orders every 10 seconds
+  // Connect to socket for real-time updates
+  useAdminSocket();
+
+  // Fetch orders (no polling needed with WebSocket)
   const { data, isLoading } = useQuery({
     queryKey: ["admin-orders"],
     queryFn: () => api.getAllOrders(),
-    refetchInterval: 10000,
   });
 
   const updateStatusMutation = useMutation({
@@ -72,6 +75,16 @@ export function LiveOrdersView() {
       title: "Ready",
       status: "ready",
       orders: orders.filter((o) => o.status === "ready"),
+    },
+    {
+      title: "Completed",
+      status: "completed",
+      orders: orders.filter((o) => o.status === "completed"),
+    },
+    {
+      title: "Cancelled",
+      status: "cancelled",
+      orders: orders.filter((o) => o.status === "cancelled"),
     },
   ];
 

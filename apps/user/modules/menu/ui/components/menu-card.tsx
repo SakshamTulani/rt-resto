@@ -11,9 +11,22 @@ interface MenuCardProps {
 
 export function MenuCard({ item }: MenuCardProps) {
   const addItem = useCartStore((state) => state.addItem);
+  const cartItems = useCartStore((state) => state.items);
   const price = parseFloat(String(item.basePrice));
 
+  const cartItem = cartItems.find((i) => i.menuItem.id === item.id);
+  const cartQuantity = cartItem?.quantity || 0;
+
+  const isStockLimited =
+    item.stockQuantity !== null && item.stockQuantity !== undefined;
+  const isOutOfStock = isStockLimited && item.stockQuantity! <= 0;
+  // Disable if OOS or if cart has reached the stock limit
+  const isMaxStockReached =
+    isStockLimited && cartQuantity >= item.stockQuantity!;
+  const isDisabled = !item.isAvailable || isOutOfStock || isMaxStockReached;
+
   const handleAddToCart = () => {
+    if (isDisabled) return;
     addItem(item, 1);
   };
 
@@ -59,9 +72,11 @@ export function MenuCard({ item }: MenuCardProps) {
         </div>
 
         {/* Unavailable overlay */}
-        {!item.isAvailable && (
+        {(!item.isAvailable || isOutOfStock) && (
           <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-            <span className="text-white font-semibold">Unavailable</span>
+            <span className="text-white font-semibold">
+              {isOutOfStock ? "Out of Stock" : "Unavailable"}
+            </span>
           </div>
         )}
       </div>
@@ -69,19 +84,28 @@ export function MenuCard({ item }: MenuCardProps) {
       {/* Content */}
       <div className="p-4">
         <h3 className="font-semibold text-lg line-clamp-1">{item.name}</h3>
-        <p className="text-sm text-muted-foreground line-clamp-2 mt-1 min-h-10">
-          {item.description || "Delicious dish prepared with care"}
-        </p>
+        <div className="min-h-10 mt-1">
+          <p className="text-sm text-muted-foreground line-clamp-2">
+            {item.description || "Delicious dish prepared with care"}
+          </p>
+        </div>
 
         <div className="flex items-center justify-between mt-4">
-          <span className="text-lg font-bold text-orange-500">
-            ${price.toFixed(2)}
-          </span>
+          <div>
+            <span className="text-lg font-bold text-orange-500">
+              ${price.toFixed(2)}
+            </span>
+            {isStockLimited && !isOutOfStock && item.stockQuantity! < 10 && (
+              <p className="text-xs text-orange-600 font-medium">
+                Only {item.stockQuantity} left!
+              </p>
+            )}
+          </div>
           <Button
             size="icon"
             onClick={handleAddToCart}
-            disabled={!item.isAvailable}
-            className="bg-orange-500 hover:bg-orange-600 text-white rounded-full h-10 w-10">
+            disabled={isDisabled}
+            className="bg-orange-500 hover:bg-orange-600 text-white rounded-full h-10 w-10 disabled:opacity-50">
             <Plus className="h-5 w-5" />
           </Button>
         </div>

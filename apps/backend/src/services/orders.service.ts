@@ -1,6 +1,7 @@
 import { db } from "../db";
 import { orders, orderItems, menuItems } from "../db/schema";
 import { eq, and, desc, sql } from "drizzle-orm";
+import { orderEvents } from "../socket";
 
 type OrderStatus =
   | "pending"
@@ -218,6 +219,14 @@ export const ordersService = {
 
     // Fetch full order with items
     const fullOrder = await this.getById(result.id);
+
+    // Emit socket event
+    orderEvents.created({
+      id: result.id,
+      sessionId: input.sessionId,
+      userId: input.userId,
+    });
+
     return { success: true, order: fullOrder };
   },
 
@@ -225,11 +234,25 @@ export const ordersService = {
    * Update order status
    */
   async updateStatus(id: string, status: OrderStatus) {
+    // Get previous status for event
+    const existing = await this.getById(id);
+    const previousStatus = existing?.status || "pending";
+
     const [order] = await db
       .update(orders)
       .set({ status, updatedAt: new Date() })
       .where(eq(orders.id, id))
       .returning();
+
+    // Emit socket event
+    if (order && existing) {
+      orderEvents.statusUpdated({
+        id: order.id,
+        sessionId: existing.sessionId,
+        status: order.status,
+        previousStatus,
+      });
+    }
 
     return order;
   },
@@ -267,6 +290,12 @@ export const ordersService = {
         .update(orders)
         .set({ status: "cancelled", updatedAt: new Date() })
         .where(eq(orders.id, id));
+    });
+
+    // Emit socket event
+    orderEvents.cancelled({
+      id: order.id,
+      sessionId: order.sessionId,
     });
 
     return { success: true };

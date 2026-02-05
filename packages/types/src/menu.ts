@@ -20,6 +20,14 @@ export interface MenuItem {
   deletedAt: Date | null;
 }
 
+export interface MenuItemWithCategory extends MenuItem {
+  category: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+}
+
 /**
  * Menu item for display (without internal fields)
  */

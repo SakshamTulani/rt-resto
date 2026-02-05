@@ -6,13 +6,16 @@ import { OrderTimeline } from "../components/order-timeline";
 import { Loader2, ArrowLeft, Calendar, FileText } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@workspace/ui/components/button";
-
 import { useParams, useRouter } from "next/navigation";
+import { useOrderSocket } from "@/hooks/use-order-socket";
 
 export function OrderDetailView() {
   const params = useParams();
   const id = params?.id as string;
   const router = useRouter();
+
+  // Subscribe to real-time updates for this order
+  useOrderSocket(id);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["order", id],

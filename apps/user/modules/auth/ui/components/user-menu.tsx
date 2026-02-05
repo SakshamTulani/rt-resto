@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "../../lib/auth-client";
 import { Button } from "@workspace/ui/components/button";
-import { User, LogOut, Loader2, Package } from "lucide-react";
+import { LogOut, Loader2, Package } from "lucide-react";
 import Link from "next/link";
 
 export function UserMenu() {

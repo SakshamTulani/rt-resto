@@ -74,3 +74,38 @@ export const customizationOptions = pgTable(
   },
   (table) => [index("customization_options_group_id_idx").on(table.groupId)],
 );
+
+import { relations } from "drizzle-orm";
+
+export const categoriesRelations = relations(categories, ({ many }) => ({
+  menuItems: many(menuItems),
+}));
+
+export const menuItemsRelations = relations(menuItems, ({ one, many }) => ({
+  category: one(categories, {
+    fields: [menuItems.categoryId],
+    references: [categories.id],
+  }),
+  customizationGroups: many(customizationGroups),
+}));
+
+export const customizationGroupsRelations = relations(
+  customizationGroups,
+  ({ one, many }) => ({
+    menuItem: one(menuItems, {
+      fields: [customizationGroups.menuItemId],
+      references: [menuItems.id],
+    }),
+    options: many(customizationOptions),
+  }),
+);
+
+export const customizationOptionsRelations = relations(
+  customizationOptions,
+  ({ one }) => ({
+    group: one(customizationGroups, {
+      fields: [customizationOptions.groupId],
+      references: [customizationGroups.id],
+    }),
+  }),
+);

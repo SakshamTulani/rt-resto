@@ -1,9 +1,12 @@
 import type {
   Category,
   MenuItem,
+  MenuItemWithCategory,
   MenuFilterParams,
   ApiResponse,
   OrderWithItems,
+  CreateMenuItemInput,
+  UpdateMenuItemInput,
 } from "@workspace/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3002";
@@ -70,7 +73,7 @@ class ApiClient {
   // Menu
   async getMenuItems(
     filters?: MenuFilterParams,
-  ): Promise<ApiResponse<MenuItem[]>> {
+  ): Promise<ApiResponse<MenuItemWithCategory[]>> {
     return this.request("/api/menu", {
       params: filters as Record<string, string | number | boolean | undefined>,
     });
@@ -147,7 +150,7 @@ class ApiClient {
   }
 
   async createMenuItem(
-    data: Partial<MenuItem>,
+    data: CreateMenuItemInput,
   ): Promise<ApiResponse<MenuItem>> {
     return this.request("/api/menu", {
       method: "POST",
@@ -157,7 +160,7 @@ class ApiClient {
 
   async updateMenuItem(
     id: string,
-    data: Partial<MenuItem>,
+    data: UpdateMenuItemInput,
   ): Promise<ApiResponse<MenuItem>> {
     return this.request(`/api/menu/${id}`, {
       method: "PUT",

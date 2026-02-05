@@ -60,7 +60,7 @@ export const menuService = {
     return db.query.menuItems.findMany({
       where: and(...conditions),
       with: {
-        // We'll add relations later
+        category: true,
       },
       orderBy: (menuItems, { asc }) => [asc(menuItems.name)],
     });

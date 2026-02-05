@@ -14,6 +14,17 @@ interface CartSheetProps {
   onOpenChange: (open: boolean) => void;
 }
 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@workspace/ui/components/dialog";
+import { Loader2, CheckCircle2 } from "lucide-react";
+import { toast } from "sonner";
+
 export function CartSheet({ open, onOpenChange }: CartSheetProps) {
   const {
     items,
@@ -29,21 +40,40 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const handlePlaceOrder = async () => {
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [paymentState, setPaymentState] = useState<
+    "idle" | "processing" | "success"
+  >("idle");
+
+  const handlePlaceOrder = () => {
     if (!session?.user) {
       onOpenChange(false);
       router.push("/login");
       return;
     }
+    setIsPaymentOpen(true);
+  };
+
+  const processPayment = async () => {
+    setPaymentState("processing");
+    // Mock payment delay
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     try {
       await createOrder.mutateAsync(notes || undefined);
-      setNotes("");
-      onOpenChange(false);
-      alert("Order placed successfully!");
-      router.push("/orders");
+      setPaymentState("success");
+      // Wait for success animation
+      setTimeout(() => {
+        setIsPaymentOpen(false);
+        onOpenChange(false);
+        setNotes("");
+        setPaymentState("idle");
+        router.push("/orders");
+        toast.success("Order placed successfully!");
+      }, 1500);
     } catch (error) {
-      alert("Failed to place order. Please try again.");
+      setPaymentState("idle");
+      toast.error("Failed to place order. Please try again.");
     }
   };
 
@@ -58,7 +88,7 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
       />
 
       {/* Sheet */}
-      <div className="fixed right-0 top-0 h-full w-full max-w-md bg-background z-50 shadow-2xl flex flex-col">
+      <div className="fixed right-0 top-0 h-full w-full max-w-md bg-background z-50 shadow-2xl flex flex-col transition-transform duration-300 transform data-[state=closed]:translate-x-full slide-in-from-right animate-in fade-in zoom-in-95">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-2">
@@ -137,14 +167,79 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
               </Button>
               <Button
                 className="flex-1 bg-orange-500 hover:bg-orange-600 text-white"
-                onClick={handlePlaceOrder}
-                disabled={createOrder.isPending}>
-                {createOrder.isPending ? "Placing..." : "Place Order"}
+                onClick={handlePlaceOrder}>
+                Place Order
               </Button>
             </div>
           </div>
         )}
       </div>
+
+      {/* Payment Dialog */}
+      <Dialog
+        open={isPaymentOpen}
+        onOpenChange={(open) =>
+          !open && paymentState !== "processing" && setIsPaymentOpen(false)
+        }>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Payment</DialogTitle>
+            <DialogDescription>
+              Confirm your payment of{" "}
+              <span className="font-bold text-foreground">
+                ${getTotal().toFixed(2)}
+              </span>
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-6 flex flex-col items-center justify-center space-y-4">
+            {paymentState === "idle" && (
+              <div className="text-center space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  Mock Payment Gateway
+                </p>
+                <div className="p-4 border rounded-md bg-muted/20 w-full text-left">
+                  <p className="font-medium">Credit Card •••• 4242</p>
+                </div>
+              </div>
+            )}
+
+            {paymentState === "processing" && (
+              <div className="flex flex-col items-center animate-in fade-in">
+                <Loader2 className="h-10 w-10 animate-spin text-orange-500 mb-2" />
+                <p>Processing payment...</p>
+              </div>
+            )}
+
+            {paymentState === "success" && (
+              <div className="flex flex-col items-center animate-in zoom-in">
+                <div className="h-16 w-16 rounded-full bg-green-100 flex items-center justify-center mb-2">
+                  <CheckCircle2 className="h-8 w-8 text-green-600" />
+                </div>
+                <h3 className="text-xl font-bold text-green-600">
+                  Payment Successful!
+                </h3>
+                <p className="text-muted-foreground">Order placed.</p>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter className="sm:justify-between">
+            {paymentState === "idle" && (
+              <>
+                <Button variant="ghost" onClick={() => setIsPaymentOpen(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  onClick={processPayment}
+                  className="bg-orange-500 hover:bg-orange-600">
+                  Pay Now
+                </Button>
+              </>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

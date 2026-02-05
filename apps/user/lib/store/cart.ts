@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type { MenuItem } from "@workspace/types";
+import { toast } from "sonner";
 
 export interface CartItem {
   menuItem: MenuItem;
@@ -34,11 +35,29 @@ export const useCartStore = create<CartState>()(
     (set, get) => ({
       items: [],
 
+      // ... inside store ...
+
       addItem: (menuItem, quantity = 1, notes) => {
         set((state) => {
           const existingIndex = state.items.findIndex(
             (item) => item.menuItem.id === menuItem.id,
           );
+
+          // Check stock limit
+          const currentQty =
+            existingIndex >= 0 ? state.items[existingIndex]!.quantity : 0;
+          const newTotal = currentQty + quantity;
+
+          if (
+            menuItem.stockQuantity !== null &&
+            menuItem.stockQuantity !== undefined &&
+            newTotal > menuItem.stockQuantity
+          ) {
+            toast.error(
+              `Only ${menuItem.stockQuantity} items available in stock`,
+            );
+            return state;
+          }
 
           if (existingIndex >= 0) {
             // Update existing item
@@ -73,11 +92,27 @@ export const useCartStore = create<CartState>()(
           return;
         }
 
-        set((state) => ({
-          items: state.items.map((item) =>
-            item.menuItem.id === menuItemId ? { ...item, quantity } : item,
-          ),
-        }));
+        set((state) => {
+          const item = state.items.find((i) => i.menuItem.id === menuItemId);
+          if (!item) return state;
+
+          if (
+            item.menuItem.stockQuantity !== null &&
+            item.menuItem.stockQuantity !== undefined &&
+            quantity > item.menuItem.stockQuantity
+          ) {
+            toast.error(
+              `Only ${item.menuItem.stockQuantity} items available in stock`,
+            );
+            return state;
+          }
+
+          return {
+            items: state.items.map((i) =>
+              i.menuItem.id === menuItemId ? { ...i, quantity } : i,
+            ),
+          };
+        });
       },
 
       updateNotes: (menuItemId, notes) => {
