@@ -11,7 +11,6 @@ This project is organized as a monorepo with the following structure:
 - **`apps/backend`**: The backend API service built with Express, providing data to both frontend applications.
 - **`packages/*`**: Shared libraries and configurations used across the applications (UI components, TypeScript config, ESLint config, etc.).
 
-
 ## Prerequisites
 
 Before getting started, ensure you have the following installed on your machine:
@@ -83,6 +82,24 @@ Follow these steps to set up the project locally:
     - **Admin App**: [http://localhost:3001](http://localhost:3001)
     - **Backend API**: [http://localhost:3002](http://localhost:3002)
 
+## Managing User Roles
+
+To assign roles (Admin, Kitchen) to users, use Drizzle Studio:
+
+1.  **Run Drizzle Studio:**
+
+    ```bash
+    pnpm --filter backend db:studio
+    ```
+
+    This will open Drizzle Studio in your browser (usually at https://local.drizzle.studio).
+
+2.  **Update User Role:**
+    - Navigate to the `user` table.
+    - Find the target user.
+    - Update the `role` column to either `admin` or `kitchen`.
+    - Changes are saved automatically.
+
 ## Commands
 
 - `pnpm dev`: Start the development server for all apps.
@@ -96,5 +113,7 @@ For app-specific commands, you can filter by workspace:
 pnpm --filter client dev
 pnpm --filter admin build
 ```
+
 ## ER diagram
+
  <img width="2308" height="2637" alt="image" src="https://github.com/user-attachments/assets/360abcce-86f6-4a01-8f1d-6999d9746d77" />

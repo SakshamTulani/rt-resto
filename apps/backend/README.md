@@ -65,6 +65,21 @@ This is the backend API service for the **RT Resto** Restaurant Management Syste
 
     The server will be available at [http://localhost:3002](http://localhost:3002).
 
+## Managing User Roles
+
+To assign roles (Admin, Kitchen) to users, use Drizzle Studio:
+
+1.  **Run Drizzle Studio:**
+    ```bash
+    pnpm db:studio
+    ```
+    This will open Drizzle Studio in your browser (usually at https://local.drizzle.studio).
+2.  **Update User Role:**
+    - Navigate to the `user` table.
+    - Find the target user.
+    - Update the `role` column to either `admin` or `kitchen`.
+    - Changes are saved automatically.
+
 ## Available Scripts
 
 - `pnpm dev`: Starts the development server in watch mode.
