@@ -65,6 +65,46 @@ This is the backend API service for the **RT Resto** Restaurant Management Syste
 
     The server will be available at [http://localhost:3002](http://localhost:3002).
 
+## API Documentation
+
+### Base URL: `/api`
+
+#### **Authentication**
+
+- `ALL /api/auth/*` - Handled by Better Auth
+
+#### **Categories** (`/api/categories`)
+
+- `GET /` - Get all categories
+- `GET /:id` - Get category by ID
+- `GET /slug/:slug` - Get category by slug
+- `POST /` - Create category (Admin only)
+- `PUT /:id` - Update category (Admin only)
+- `DELETE /:id` - Delete category (Admin only)
+
+#### **Menu** (`/api/menu`)
+
+- `GET /` - Get all menu items (Supports filters: `categoryId`, `search`, `minPrice`, `maxPrice`, `available`, `isVegetarian`, `isVegan`, `isGlutenFree`)
+- `GET /:id` - Get menu item by ID
+- `POST /` - Create menu item (Admin only)
+- `PUT /:id` - Update menu item (Admin only)
+- `DELETE /:id` - Soft delete menu item (Admin only)
+
+#### **Orders** (`/api/orders`)
+
+- `GET /` - Get all orders (Kitchen/Admin only. Filter by `status`)
+- `GET /my` - Get current user's orders (Auth required)
+- `GET /session/:sessionId` - Get orders by session ID (for guests)
+- `GET /:id` - Get order by ID
+- `POST /validate` - Validate cart items and get totals
+- `POST /` - Create a new order (Auth required)
+- `PUT /:id/status` - Update order status (Kitchen only)
+- `POST /:id/cancel` - Cancel an order
+
+#### **System**
+
+- `GET /health` - Health check endpoint
+
 ## Managing User Roles
 
 To assign roles (Admin, Kitchen) to users, use Drizzle Studio:
@@ -91,3 +131,7 @@ To assign roles (Admin, Kitchen) to users, use Drizzle Studio:
 - `pnpm db:studio`: Opens Drizzle Studio to view data.
 - `pnpm db:seed`: Seeds the database with initial data.
 - `pnpm test`: Runs tests with Vitest.
+
+## ER diagram
+
+ <img width="2308" height="2637" alt="image" src="https://github.com/user-attachments/assets/360abcce-86f6-4a01-8f1d-6999d9746d77" />
