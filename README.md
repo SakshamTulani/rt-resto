@@ -102,10 +102,10 @@ To assign roles (Admin, Kitchen) to users, use Drizzle Studio:
 
 ## Commands
 
-- `pnpm dev`: Start the development server for all apps.
-- `pnpm build`: Build all apps and packages.
-- `pnpm lint`: Lint all codebases.
-- `pnpm format`: Format code with Prettier.
+- `turbo dev`: Start the development server for all apps.
+- `turbo build`: Build all apps and packages.
+- `turbo lint`: Lint all codebases.
+- `turbo format`: Format code with Prettier.
 
 For app-specific commands, you can filter by workspace:
 
