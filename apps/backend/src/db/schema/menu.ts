@@ -8,6 +8,7 @@ import {
   uuid,
   index,
 } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
 export const categories = pgTable("categories", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -42,38 +43,6 @@ export const menuItems = pgTable(
   (table) => [index("menu_items_category_id_idx").on(table.categoryId)],
 );
 
-export const customizationGroups = pgTable(
-  "customization_groups",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    menuItemId: uuid("menu_item_id")
-      .notNull()
-      .references(() => menuItems.id, { onDelete: "cascade" }),
-    name: text("name").notNull(),
-    isRequired: boolean("is_required").notNull().default(false),
-    maxSelections: integer("max_selections").notNull().default(1),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-  },
-  (table) => [
-    index("customization_groups_menu_item_id_idx").on(table.menuItemId),
-  ],
-);
-
-export const customizationOptions = pgTable(
-  "customization_options",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    groupId: uuid("group_id")
-      .notNull()
-      .references(() => customizationGroups.id, { onDelete: "cascade" }),
-    priceModifier: integer("price_modifier").notNull().default(0),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-  },
-  (table) => [index("customization_options_group_id_idx").on(table.groupId)],
-);
-
-import { relations } from "drizzle-orm";
-
 export const categoriesRelations = relations(categories, ({ many }) => ({
   menuItems: many(menuItems),
 }));
@@ -83,26 +52,4 @@ export const menuItemsRelations = relations(menuItems, ({ one, many }) => ({
     fields: [menuItems.categoryId],
     references: [categories.id],
   }),
-  customizationGroups: many(customizationGroups),
 }));
-
-export const customizationGroupsRelations = relations(
-  customizationGroups,
-  ({ one, many }) => ({
-    menuItem: one(menuItems, {
-      fields: [customizationGroups.menuItemId],
-      references: [menuItems.id],
-    }),
-    options: many(customizationOptions),
-  }),
-);
-
-export const customizationOptionsRelations = relations(
-  customizationOptions,
-  ({ one }) => ({
-    group: one(customizationGroups, {
-      fields: [customizationOptions.groupId],
-      references: [customizationGroups.id],
-    }),
-  }),
-);

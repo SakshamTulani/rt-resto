@@ -9,7 +9,7 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 import { user } from "./user";
-import { menuItems, customizationOptions } from "./menu";
+import { menuItems } from "./menu";
 import { relations } from "drizzle-orm";
 
 export const orderStatusEnum = pgEnum("order_status", [
@@ -65,38 +65,6 @@ export const orderItems = pgTable(
     index("order_items_order_id_idx").on(table.orderId),
     index("order_items_menu_item_id_idx").on(table.menuItemId),
   ],
-);
-
-export const orderItemCustomizations = pgTable(
-  "order_item_customizations",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    orderItemId: uuid("order_item_id")
-      .notNull()
-      .references(() => orderItems.id, { onDelete: "cascade" }),
-    customizationOptionId: uuid("customization_option_id")
-      .notNull()
-      .references(() => customizationOptions.id),
-    price: integer("price").notNull(),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-  },
-  (table) => [
-    index("order_item_customizations_order_item_id_idx").on(table.orderItemId),
-  ],
-);
-
-export const orderStatusHistory = pgTable(
-  "order_status_history",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    orderId: uuid("order_id")
-      .notNull()
-      .references(() => orders.id, { onDelete: "cascade" }),
-    status: orderStatusEnum("status").notNull(),
-    changedAt: timestamp("changed_at").notNull().defaultNow(),
-    changedById: text("changed_by_id").references(() => user.id),
-  },
-  (table) => [index("order_status_history_order_id_idx").on(table.orderId)],
 );
 
 // Relations
