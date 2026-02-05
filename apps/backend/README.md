@@ -35,12 +35,12 @@ This is the backend API service for the **RT Resto** Restaurant Management Syste
     docker-compose up -d
     ```
 
-3.  **Database Migration:**
+3.  **Database Push:**
 
-    Run migrations to set up the database schema:
+    Run to set up the database schema:
 
     ```bash
-    pnpm db:migrate
+    pnpm db:push
     ```
 
     _Optionally, seed the database:_
