@@ -7,15 +7,19 @@ import { Button } from "@workspace/ui/components/button";
 import { LogOut, Loader2, Package } from "lucide-react";
 import Link from "next/link";
 
+import { useCartStore } from "@/lib/store/cart";
+
 export function UserMenu() {
   const { data: session, isPending } = useSession();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const clearCart = useCartStore((state) => state.clearCart);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
+      clearCart();
       await signOut();
       router.refresh();
     } catch (error) {
