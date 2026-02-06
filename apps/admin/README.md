@@ -52,3 +52,4 @@ Ensure the following are running before starting the admin app:
 - `pnpm start`: Starts the production server.
 - `pnpm lint`: Runs ESLint.
 - `pnpm typecheck`: Runs TypeScript type checking.
+- `pnpm test`: Runs component tests with Vitest.

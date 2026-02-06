@@ -65,6 +65,16 @@ This is the backend API service for the **RT Resto** Restaurant Management Syste
 
     The server will be available at [http://localhost:3002](http://localhost:3002).
 
+    The server will be available at [http://localhost:3002](http://localhost:3002).
+
+## Testing
+
+Run the integration tests with:
+
+```bash
+pnpm test
+```
+
 ## API Documentation
 
 ### Base URL: `/api`
